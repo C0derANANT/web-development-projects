@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math Tools</title>
+  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+    }
+
+    header {
+      background-color: #1e3a8a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .tab-buttons {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .tab-buttons button {
+      background-color: #2563eb;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      margin: 0 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .tab-buttons button:hover {
+      background-color: #1d4ed8;
+    }
+
+    .tab-content {
+      display: none;
+      height: calc(100vh - 150px);
+    }
+
+    .active {
+      display: flex;
+    }
+
+    #seriesGenerator {
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+    }
+
+    #graphTool {
+      flex: 1;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 8px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .button-group button {
+      flex: 1 1 48%;
+      padding: 10px;
+      font-weight: bold;
+      background-color: #1d4ed8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .button-group button:hover {
+      background-color: #2563eb;
+    }
+
+    .output {
+      margin-top: 25px;
+      padding: 15px;
+      background-color: #e0f2fe;
+      border-left: 5px solid #0284c7;
+      border-radius: 5px;
+    }
+
+    #ggb-element {
+      width: 100%;
+      height: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .tab-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .tab-buttons button {
+        margin: 10px 0;
+        width: 80%;
+      }
+
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Math Tools</h1>
+  </header>
+
+  <div class="tab-buttons">
+    <button onclick="showTab('seriesGenerator')">Series Generator</button>
+    <button onclick="showTab('graphTool')">Graphing Calculator</button>
+  </div>
+
+  <!-- Series Generator Tab -->
+  <div class="tab-content active" id="seriesGenerator">
+    <div class="container">
+      <h2>Math Series Generator</h2>
+
+      <div class="input-group">
+        <label>First Term (a):</label>
+        <input type="number" id="firstTerm" value="1">
+      </div>
+
+      <div class="input-group">
+        <label>Common Difference / Ratio (d or r):</label>
+        <input type="number" id="common" value="1">
+      </div>
+
+      <div class="input-group">
+        <label>Number of Terms (n):</label>
+        <input type="number" id="terms" value="10">
+      </div>
+
+      <div class="button-group">
+        <button onclick="generateAP()">Generate AP</button>
+        <button onclick="generateGP()">Generate GP</button>
+        <button onclick="generateHP()">Generate HP</button>
+        <button onclick="generateFibonacci()">Generate Fibonacci</button>
+      </div>
+
+      <div class="output" id="output"></div>
+    </div>
+  </div>
+
+  <!-- Graphing Calculator Tab -->
+  <div class="tab-content" id="graphTool">
+    <div id="ggb-element"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(tabId).classList.add('active');
+
+      // If graphing calculator tab is opened, re-inject GeoGebra
+      if (tabId === 'graphTool' && !window.graphLoaded) {
+        const params = {
+          appName: "graphing",
+          width: window.innerWidth,
+          height: window.innerHeight - 150,
+          showToolBar: false,
+          showAlgebraInput: true,
+          showMenuBar: false,
+          enableShiftDragZoom: true,
+          enableRightClick: false
+        };
+        const applet = new GGBApplet(params, true);
+        applet.inject('ggb-element');
+        window.graphLoaded = true;
+      }
+    }
+
+    function getInputValues() {
+      const a = parseFloat(document.getElementById("firstTerm").value);
+      const d = parseFloat(document.getElementById("common").value);
+      const n = parseInt(document.getElementById("terms").value);
+      return { a, d, n };
+    }
+
+    function generateAP() {
+      const { a, d, n } = getInputValues();
+      const series = [];
+      for (let i = 0; i < n; i++) {
+        series.push(a + i * d);
+      }
+      displaySeries(series, "Arithmetic Progression (AP)");
+    }
+
+    function generateGP() {
+      const { a, d, n } = getInputValues();
+      const series = [];
+      for (let i = 0; i < n; i++) {
+        series.push(a * Math.pow(d, i));
+      }
+      displaySeries(series, "Geometric Progression (GP)");
+    }
+
+    function generateHP() {
+      const { a, d, n } = getInputValues();
+      const series = [];
+      for (let i = 0; i < n; i++) {
+        const apTerm = a + i * d;
+        series.push((1 / apTerm).toFixed(4));
+      }
+      displaySeries(series, "Harmonic Progression (HP)");
+    }
+
+    function generateFibonacci() {
+      const { n } = getInputValues();
+      const series = [];
+      let a = 0, b = 1;
+      for (let i = 0; i < n; i++) {
+        series.push(a);
+        [a, b] = [b, a + b];
+      }
+      displaySeries(series, "Fibonacci Series");
+    }
+
+    function displaySeries(series, title) {
+      document.getElementById("output").innerHTML = `
+        <h3>${title}</h3>
+        <p>${series.join(", ")}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
