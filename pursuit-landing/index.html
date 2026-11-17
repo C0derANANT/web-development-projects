@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pursuit: track your job hunt</title>
+  <meta name="description" content="Pursuit is a simple iPhone app that keeps track of every job application, from wishlist to offer.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top"><img src="favicon.svg" alt="" width="28" height="28">Pursuit</a>
+    <a class="topbar-link" href="https://github.com/C0derANANT/ios-development/tree/main/Pursuit">GitHub</a>
+  </header>
+
+  <main id="top">
+    <!-- 1 + 2. The mess, then the sort -->
+    <section class="sort" aria-labelledby="sort-title">
+      <div class="sort-pin">
+        <div class="sort-titles">
+          <h1 id="sort-title" class="title-before">Where did I apply again?</h1>
+          <p class="title-after">Every application, in its place.</p>
+        </div>
+
+        <div class="board">
+          <div class="stage" style="--stage: 0; --color: var(--wishlist)">
+            <h2 class="stage-name">Wishlist</h2>
+            <div class="note" style="--slot: 0"><strong>Atlassian</strong> <span>Graduate Engineer</span></div>
+            <div class="note" style="--slot: 1"><strong>CRED</strong> <span>iOS Engineer</span></div>
+          </div>
+
+          <div class="stage" style="--stage: 1; --color: var(--applied)">
+            <h2 class="stage-name">Applied</h2>
+            <div class="note" style="--slot: 0"><strong>Razorpay</strong> <span>Software Engineer I</span></div>
+            <div class="note" style="--slot: 1"><strong>Zomato</strong> <span>iOS Intern</span></div>
+            <div class="note" style="--slot: 2"><strong>PhonePe</strong> <span>SDE Intern</span></div>
+          </div>
+
+          <div class="stage" style="--stage: 2; --color: var(--interviewing)">
+            <h2 class="stage-name">Interviewing</h2>
+            <div class="note" style="--slot: 0"><strong>Swiggy</strong> <span>iOS Developer Intern</span></div>
+            <div class="note" style="--slot: 1"><strong>Freshworks</strong> <span>Mobile Intern</span></div>
+            <div class="note" style="--slot: 2"><strong>Meesho</strong> <span>SDE I</span></div>
+          </div>
+
+          <div class="stage" style="--stage: 3; --color: var(--offer)">
+            <h2 class="stage-name">Offer</h2>
+            <div class="note" style="--slot: 0"><strong>Zoho</strong> <span>Mobile Engineer</span></div>
+          </div>
+
+          <div class="stage" style="--stage: 4; --color: var(--rejected)">
+            <h2 class="stage-name">Rejected</h2>
+            <div class="note" style="--slot: 0"><strong>Flipkart</strong> <span>SDE Intern</span></div>
+            <div class="note" style="--slot: 1"><strong>Paytm</strong> <span>iOS Developer</span></div>
+            <div class="note" style="--slot: 2"><strong>Dream11</strong> <span>Mobile Intern</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. In your pocket -->
+    <section class="pocket">
+      <div class="pocket-text">
+        <h2>Track your job hunt, from wishlist to offer.</h2>
+        <p>Pursuit is a simple iPhone app for students and job seekers who apply to lots of places. Write each application down once, move it along as you hear back, and always know where it stands.</p>
+      </div>
+
+      <div class="phone" role="img" aria-label="The Pursuit app's main screen: a list of five job applications, each with a coloured status">
+        <div class="screen">
+          <div class="screen-status"><span>9:41</span><span class="island"></span><span class="battery"></span></div>
+          <div class="screen-toolbar"><span class="plus">+</span></div>
+          <p class="screen-title">Pursuit</p>
+          <ul class="rows">
+            <li class="row">
+              <span class="avatar" style="--avatar: var(--ios-blue)">A</span>
+              <span class="row-text"><b>Graduate Engineer</b><small>Atlassian</small></span>
+              <span class="row-meta"><span class="badge" style="--color: var(--wishlist)">Wishlist</span><small>16 Nov</small></span>
+            </li>
+            <li class="row">
+              <span class="avatar" style="--avatar: var(--ios-purple)">S</span>
+              <span class="row-text"><b>iOS Developer Intern</b><small>Swiggy · Bengaluru</small></span>
+              <span class="row-meta"><span class="badge" style="--color: var(--interviewing)">Interviewing</span><small>14 Nov</small></span>
+            </li>
+            <li class="row">
+              <span class="avatar" style="--avatar: var(--ios-blue)">R</span>
+              <span class="row-text"><b>Software Engineer I</b><small>Razorpay · Remote</small></span>
+              <span class="row-meta"><span class="badge" style="--color: var(--applied)">Applied</span><small>11 Nov</small></span>
+            </li>
+            <li class="row">
+              <span class="avatar" style="--avatar: var(--ios-blue)">Z</span>
+              <span class="row-text"><b>Mobile Engineer</b><small>Zoho · Chennai</small></span>
+              <span class="row-meta"><span class="badge" style="--color: var(--offer)">Offer</span><small>27 Oct</small></span>
+            </li>
+            <li class="row">
+              <span class="avatar" style="--avatar: var(--ios-teal)">F</span>
+              <span class="row-text"><b>SDE Intern</b><small>Flipkart · Bengaluru</small></span>
+              <span class="row-meta"><span class="badge" style="--color: var(--rejected)">Rejected</span><small>18 Oct</small></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. What it does -->
+    <section class="features" aria-labelledby="features-title">
+      <h2 id="features-title">What it does</h2>
+      <ol class="feature-list">
+        <li class="feature">
+          <span class="feature-number" aria-hidden="true">01</span>
+          <div class="feature-text">
+            <h3>Log an application</h3>
+            <p>Company, role, date and a short note. It takes a few seconds.</p>
+          </div>
+          <div class="feature-visual mini-form" aria-hidden="true">
+            <span><small>Company</small>Swiggy</span>
+            <span><small>Role</small>iOS Developer Intern</span>
+            <span><small>Status</small><em class="badge" style="--color: var(--interviewing)">Interviewing</em></span>
+          </div>
+        </li>
+        <li class="feature">
+          <span class="feature-number" aria-hidden="true">02</span>
+          <div class="feature-text">
+            <h3>See every stage at a glance</h3>
+            <p>Five colours, from Wishlist to Offer, show where each application stands.</p>
+          </div>
+          <div class="feature-visual badges" aria-hidden="true">
+            <span class="badge" style="--color: var(--wishlist)">Wishlist</span>
+            <span class="badge" style="--color: var(--applied)">Applied</span>
+            <span class="badge" style="--color: var(--interviewing)">Interviewing</span>
+            <span class="badge" style="--color: var(--offer)">Offer</span>
+            <span class="badge" style="--color: var(--rejected)">Rejected</span>
+          </div>
+        </li>
+        <li class="feature">
+          <span class="feature-number" aria-hidden="true">03</span>
+          <div class="feature-text">
+            <h3>No account. Works offline.</h3>
+            <p>Everything is saved on your phone. Nothing to sign up for, nothing sent anywhere.</p>
+          </div>
+          <div class="feature-visual pills" aria-hidden="true">
+            <span>No sign-up</span>
+            <span>No internet needed</span>
+            <span>Saved on your phone</span>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 5. Made while learning -->
+    <section class="learning" aria-labelledby="learning-title">
+      <h2 id="learning-title">Made while learning</h2>
+      <p class="lead">Pursuit is my first iOS app. I'm building it in seven days, from 17 to 24 November 2026, while learning Swift. This page is my first scroll-animated website.</p>
+      <h3>Three things I learned so far</h3>
+      <ol class="lessons">
+        <li>An app screen is a description. When the data changes, SwiftUI redraws the screen for me.</li>
+        <li>Save straight away. An application added just before closing the app got lost until I fixed it.</li>
+        <li>Never rename a saved value. Old data still uses the old name, so I add new options instead.</li>
+      </ol>
+      <a class="button" href="https://github.com/C0derANANT/ios-development/tree/main/Pursuit">See the code on GitHub</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Made by Anant.</p>
+  </footer>
+</body>
+</html>
