@@ -12,8 +12,9 @@ if (root.classList.contains('motion') && librariesLoaded) {
   tune.scrollMobileMode = 'default';
   tune.use(StringTune.StringProgress); // sets --sort from 0 to 1 on the sort section
   tune.use(StringTune.StringSplit);    // splits each stage name into letters
+  tune.use(StringTune.StringParallax); // moves the phone a little slower than the page
   tune.start(60);
 } else {
-  // A library didn't load: show everything already sorted instead.
+  // Less motion was asked for, or a library didn't load: show everything already sorted.
   root.classList.remove('motion');
 }

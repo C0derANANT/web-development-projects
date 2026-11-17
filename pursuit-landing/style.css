@@ -439,3 +439,36 @@ a { color: var(--accent); }
   font-size: 0.9rem;
   color: var(--muted);
 }
+
+/* ---------- Small screens: stages become rows instead of columns ---------- */
+@media (max-width: 700px) {
+  .sort-pin { gap: 1.75rem; padding-top: 5rem; }
+
+  .board { height: 23rem; }
+  .stage-name {
+    top: calc(var(--stage) * 4.6rem);
+    left: 3px;
+    font-size: 0.85rem;
+  }
+  .note {
+    /* swap the axes: the stage picks the row, the slot picks the column */
+    --tidy-left: calc(var(--slot) * 33.333% + 3px);
+    --tidy-top: calc(1.6rem + var(--stage) * 4.6rem);
+    --note-width: calc(33.333% - 6px);
+    --note-height: 2.6rem;
+    padding: 0.3rem 0.6rem;
+  }
+  .note strong { font-size: 0.85rem; }
+  .note span { display: none; }
+
+  .pocket {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding-block: 5rem;
+  }
+
+  .feature { grid-template-columns: 2.5rem 1fr; }
+  .feature-visual { grid-column: 2; justify-self: start; }
+  .badges,
+  .pills { justify-content: flex-start; }
+}
