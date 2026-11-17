@@ -122,9 +122,18 @@ a { color: var(--accent); }
   --note-width: calc(20% - 10px);
   --note-height: 4.5rem;
 
+  /* where it starts in the pile: --x and --y go from 0 to 100 across the space the note can move in */
+  --messy-left: calc((100% - var(--note-width)) * var(--x) / 100);
+  --messy-top: calc((100% - var(--note-height)) * var(--y) / 100);
+
+  /* how sorted the note is: 0 is messy, 1 is tidy. With no --sort it is 1, so the page still works. */
+  --q: var(--sort, 1);
+
+  /* blend the two spots: at 0 all messy, at 1 all tidy, at 0.5 halfway */
   position: absolute;
-  left: var(--tidy-left);
-  top: var(--tidy-top);
+  left: calc(var(--messy-left) * (1 - var(--q)) + var(--tidy-left) * var(--q));
+  top: calc(var(--messy-top) * (1 - var(--q)) + var(--tidy-top) * var(--q));
+  rotate: calc(var(--tilt) * 1deg * (1 - var(--q)));
   width: var(--note-width);
   height: var(--note-height);
   padding: 0.6rem 0.8rem;
@@ -132,8 +141,10 @@ a { color: var(--accent); }
   flex-direction: column;
   justify-content: center;
   line-height: 1.25;
-  background: color-mix(in srgb, var(--color) 14%, white);
-  border-left: 4px solid var(--color);
+  /* plain paper while messy, the stage colour mixed in as it sorts */
+  --tint: color-mix(in srgb, var(--color) 14%, white);
+  background: color-mix(in srgb, var(--tint) calc(var(--q) * 100%), var(--paper));
+  border-left: 4px solid color-mix(in srgb, var(--color) calc(var(--q) * 100%), transparent);
   border-radius: 8px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 6px 16px rgb(0 0 0 / 0.06);
 }
