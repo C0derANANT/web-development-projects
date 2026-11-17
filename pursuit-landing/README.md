@@ -2,8 +2,8 @@
 
 A one-page website for **Pursuit**, my job application tracker for iPhone. As you scroll, twelve messy job applications sort themselves into the app's five stages.
 
+- **Live page:** <https://c0deranant.github.io/web-development-projects/pursuit-landing/>
 - **The app:** [C0derANANT/ios-development › Pursuit](https://github.com/C0derANANT/ios-development/tree/main/Pursuit)
-- **Live page:** not published yet
 
 ## The idea
 
