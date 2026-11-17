@@ -8,6 +8,10 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.css">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Switch the scroll animation on. main.js switches it off again if a library fails to load.
+    document.documentElement.classList.add('motion');
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -17,7 +21,12 @@
 
   <main id="top">
     <!-- 1 + 2. The mess, then the sort -->
-    <section class="sort" aria-labelledby="sort-title">
+    <!-- StringTune sets --sort from 0 to 1 while this section is pinned (its top at the screen's top
+         until its bottom reaches the screen's bottom) -->
+    <section class="sort" aria-labelledby="sort-title"
+      string="progress" string-key="--sort"
+      string-enter-el="top" string-enter-vp="top"
+      string-exit-el="bottom" string-exit-vp="bottom">
       <div class="sort-pin">
         <div class="sort-titles">
           <h1 id="sort-title" class="title-before">Where did I apply again?</h1>
@@ -26,37 +35,39 @@
 
         <div class="board">
           <div class="stage" style="--stage: 0; --color: var(--wishlist)">
-            <h2 class="stage-name">Wishlist</h2>
+            <h2 class="stage-name" string="split" string-split="char">Wishlist</h2>
             <div class="note" style="--slot: 0; --x: 34; --y: 22; --tilt: -8"><strong>Atlassian</strong> <span>Graduate Engineer</span></div>
             <div class="note" style="--slot: 1; --x: 61; --y: 58; --tilt: 11"><strong>CRED</strong> <span>iOS Engineer</span></div>
           </div>
 
           <div class="stage" style="--stage: 1; --color: var(--applied)">
-            <h2 class="stage-name">Applied</h2>
+            <h2 class="stage-name" string="split" string-split="char">Applied</h2>
             <div class="note" style="--slot: 0; --x: 12; --y: 48; --tilt: 6"><strong>Razorpay</strong> <span>Software Engineer I</span></div>
             <div class="note" style="--slot: 1; --x: 47; --y: 40; --tilt: -4"><strong>Zomato</strong> <span>iOS Intern</span></div>
             <div class="note" style="--slot: 2; --x: 79; --y: 18; --tilt: 9"><strong>PhonePe</strong> <span>SDE Intern</span></div>
           </div>
 
           <div class="stage" style="--stage: 2; --color: var(--interviewing)">
-            <h2 class="stage-name">Interviewing</h2>
+            <h2 class="stage-name" string="split" string-split="char">Interviewing</h2>
             <div class="note" style="--slot: 0; --x: 52; --y: 8; --tilt: -12"><strong>Swiggy</strong> <span>iOS Developer Intern</span></div>
             <div class="note" style="--slot: 1; --x: 25; --y: 78; --tilt: 5"><strong>Freshworks</strong> <span>Mobile Intern</span></div>
             <div class="note" style="--slot: 2; --x: 70; --y: 84; --tilt: -7"><strong>Meesho</strong> <span>SDE I</span></div>
           </div>
 
           <div class="stage" style="--stage: 3; --color: var(--offer)">
-            <h2 class="stage-name">Offer</h2>
+            <h2 class="stage-name" string="split" string-split="char">Offer</h2>
             <div class="note" style="--slot: 0; --x: 41; --y: 66; --tilt: 14"><strong>Zoho</strong> <span>Mobile Engineer</span></div>
           </div>
 
           <div class="stage" style="--stage: 4; --color: var(--rejected)">
-            <h2 class="stage-name">Rejected</h2>
+            <h2 class="stage-name" string="split" string-split="char">Rejected</h2>
             <div class="note" style="--slot: 0; --x: 86; --y: 52; --tilt: -10"><strong>Flipkart</strong> <span>SDE Intern</span></div>
             <div class="note" style="--slot: 1; --x: 6; --y: 14; --tilt: 8"><strong>Paytm</strong> <span>iOS Developer</span></div>
             <div class="note" style="--slot: 2; --x: 58; --y: 32; --tilt: -3"><strong>Dream11</strong> <span>Mobile Intern</span></div>
           </div>
         </div>
+
+        <p class="scroll-hint" aria-hidden="true">Scroll to sort them ↓</p>
       </div>
     </section>
 
@@ -163,10 +174,11 @@
   </main>
 
   <footer class="footer">
-    <p>Made by Anant. Smooth scrolling by <a href="https://lenis.dev/">Lenis</a>.</p>
+    <p>Made by Anant. Smooth scrolling by <a href="https://lenis.dev/">Lenis</a>, scroll effects by <a href="https://string-tune.fiddle.digital/">StringTune</a>.</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fiddle-digital/string-tune@1.2.7/dist/index.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

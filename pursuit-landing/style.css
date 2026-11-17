@@ -100,17 +100,16 @@ a { color: var(--accent); }
   position: absolute;
   top: 0;
   left: calc(var(--stage) * 20% + 5px);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   font-size: 1rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 .stage-name::before {
   content: "";
-  flex: none;
+  display: inline-block;
   width: 0.6rem;
   height: 0.6rem;
+  margin-right: 0.5rem;
   border-radius: 50%;
   background: var(--color);
 }
@@ -126,8 +125,9 @@ a { color: var(--accent); }
   --messy-left: calc((100% - var(--note-width)) * var(--x) / 100);
   --messy-top: calc((100% - var(--note-height)) * var(--y) / 100);
 
-  /* how sorted the note is: 0 is messy, 1 is tidy. With no --sort it is 1, so the page still works. */
-  --q: var(--sort, 1);
+  /* how sorted the note is: 0 is messy, 1 is tidy. Columns further right start a little later,
+     so the notes land left to right. With no --sort it is 1, so the page still works. */
+  --q: clamp(0, (var(--sort, 1) - 0.1) * 1.45 - var(--stage) * 0.075, 1);
 
   /* blend the two spots: at 0 all messy, at 1 all tidy, at 0.5 halfway */
   position: absolute;
@@ -155,6 +155,52 @@ a { color: var(--accent); }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ---------- The scroll animation (only when <html> has the "motion" class) ---------- */
+.motion .sort {
+  --sort: 0;      /* StringTune replaces this with the real value, 0 to 1, as you scroll */
+  height: 300vh;  /* extra room: the sort plays out over two screens of scrolling */
+}
+.motion .sort-pin {
+  position: sticky; /* stays on screen while the tall section scrolls past */
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+}
+
+/* the question fades out as the notes start moving, the answer fades in at the end */
+.motion .sort-titles { display: grid; }
+.motion .sort-titles > * { grid-area: 1 / 1; }
+.motion .title-before { opacity: clamp(0, 1 - var(--sort) * 2.5, 1); }
+.motion .title-after {
+  margin-top: 0;
+  font-size: clamp(1.9rem, 4.5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  color: var(--ink);
+  opacity: clamp(0, (var(--sort) - 0.8) * 5, 1);
+}
+
+/* each stage name: the dot shows first, then the letters one after another */
+.motion .stage-name { opacity: clamp(0, (var(--sort) - 0.35) * 20, 1); }
+.motion .stage-name .-s-char {
+  --r: clamp(0, (var(--sort) - 0.4) * 10 - var(--char-index) * 0.3, 1);
+  display: inline-block;
+  opacity: var(--r);
+  translate: 0 calc((1 - var(--r)) * 0.4em);
+}
+
+.scroll-hint { display: none; }
+.motion .scroll-hint {
+  display: block;
+  position: absolute;
+  inset: auto 0 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  opacity: clamp(0, 1 - var(--sort) * 8, 1);
 }
 
 /* ---------- 3. In your pocket ---------- */
