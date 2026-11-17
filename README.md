@@ -1,26 +1,30 @@
-# Web Development
+# 🌐 Web Development Projects
 
-Websites I am building while learning web development. Each folder is a
-self-contained project with its own README.
+Websites I've built while learning web development: HTML, CSS, JavaScript,
+scroll animation and responsive layouts.
 
-## Projects
+| # | Project | What it does | Tech |
+|---|---------|--------------|------|
+| 01 | [Pursuit Landing Page](01-Pursuit-Landing-Page) | One-page site for my Pursuit iPhone app: messy job applications sort themselves into stages as you scroll | HTML, CSS, JavaScript, Lenis, StringTune |
 
-| # | Project | What it is | Built with | Live |
-| - | ------- | ---------- | ---------- | ---- |
-| 1 | [Pursuit landing page](pursuit-landing/) | A one-page site for my Pursuit iPhone app: messy job applications sort themselves into stages as you scroll | HTML, CSS, JavaScript, Lenis, StringTune | [View](https://c0deranant.github.io/web-development-projects/pursuit-landing/) |
+## 🚀 Running a project
 
-## Running a project
-
-Most projects are plain HTML, CSS and JavaScript with no build step. From the
-project's folder:
+Each project has its own README. In general:
 
 ```bash
-python3 -m http.server 8000
+cd 01-Pursuit-Landing-Page
+python3 -m http.server 8000      # then open http://localhost:8000
 ```
 
-Then open <http://localhost:8000>. A project's own README says if it needs
-anything else.
+Most projects are plain HTML, CSS and JavaScript with no build step.
 
-## Author
+## 🧰 Skills used
 
-Anant Aggarwal
+- **HTML:** semantic sections, accessible labels
+- **CSS:** custom properties, `calc()` and `clamp()`, sticky positioning, `color-mix()`, media queries
+- **JavaScript:** loading libraries safely, feature checks, reduced-motion support
+- **Animation:** smooth scrolling with Lenis; scroll progress, split text and parallax with StringTune
+
+---
+
+Built by **Anant Aggarwal** · B.Tech CSE (AI)
