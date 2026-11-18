@@ -165,13 +165,15 @@ a { color: var(--accent); }
      Each scene is a slice of it that goes from 0 to 1 in its own part of the scroll. */
   --story: 0;
 
-  /* --at is how far into the story you are, measured in vh of scrolling (535 in all).
+  /* --at is how far into the story you are, measured in vh of scrolling (735 in all).
      Each scene runs between two of those marks, with a short pause after it. */
-  --at: calc(var(--story) * 535);
-  --sort: clamp(0, var(--at) / 200, 1);              /* scene 1, the sort:  0 - 200 */
-  --handoff: clamp(0, (var(--at) - 240) / 110, 1);   /* into the phone:   240 - 350 */
-  --demo-1: clamp(0, (var(--at) - 385) / 120, 1);    /* 01, log one:      385 - 505 */
-  height: calc(535vh + 100vh);  /* the scrolling, plus the screen the pin fills */
+  --at: calc(var(--story) * 735);
+  --sort: clamp(0, var(--at) / 200, 1);              /* scene 1, the sort:   0 - 200 */
+  --handoff: clamp(0, (var(--at) - 240) / 110, 1);   /* into the phone:    240 - 350 */
+  --demo-1: clamp(0, (var(--at) - 385) / 120, 1);    /* 01, log one:       385 - 505 */
+  --demo-2: clamp(0, (var(--at) - 530) / 80, 1);     /* 02, every stage:   530 - 610 */
+  --demo-3: clamp(0, (var(--at) - 635) / 70, 1);     /* 03, offline:       635 - 705 */
+  height: calc(735vh + 100vh);  /* the scrolling, plus the screen the pin fills */
 
   /* How settled the story is: 1 in the pause after a scene, 0 while things move.
      A scene counts as done once it is 85% through, and the next waits until it is 15% in.
@@ -179,7 +181,9 @@ a { color: var(--accent); }
   --settled: max(
     min(clamp(0, (var(--sort) - 0.85) / 0.15, 1),    clamp(0, 1 - var(--handoff) / 0.15, 1)),
     min(clamp(0, (var(--handoff) - 0.85) / 0.15, 1), clamp(0, 1 - var(--demo-1) / 0.15, 1)),
-    clamp(0, (var(--demo-1) - 0.85) / 0.15, 1)
+    min(clamp(0, (var(--demo-1) - 0.85) / 0.15, 1),  clamp(0, 1 - var(--demo-2) / 0.15, 1)),
+    min(clamp(0, (var(--demo-2) - 0.85) / 0.15, 1),  clamp(0, 1 - var(--demo-3) / 0.15, 1)),
+    clamp(0, (var(--demo-3) - 0.85) / 0.15, 1)
   );
 }
 .motion .story-pin {
@@ -233,8 +237,9 @@ a { color: var(--accent); }
 }
 .motion .rows { opacity: var(--swap); }
 .motion .pocket-text {
-  opacity: var(--text-in);
-  translate: 0 calc((1 - var(--text-in)) * 1.5rem);
+  --show: min(var(--text-in), clamp(0, 1 - var(--demo-1) / 0.08, 1));   /* hands over to caption 01 */
+  opacity: var(--show);
+  translate: 0 calc((1 - var(--show)) * 1.5rem);
 }
 
 /* main.js adds .measuring for a moment, to see where everything sits before the flight */
@@ -275,10 +280,14 @@ a { color: var(--accent); }
   opacity: clamp(0, 1 - var(--sort) * 8, 1);
 }
 
-/* Scene 2: in your pocket */
+/* Scene 2: in your pocket. Without motion: the text beside the phone, then "What it does" below.
+   With motion: the text and the three feature captions share one spot beside the phone. */
 .scene-pocket {
   display: grid;
   grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "text     phone"
+    "features features";
   align-items: center;
   gap: clamp(2rem, 6vw, 5rem);
   width: 100%;
@@ -286,12 +295,19 @@ a { color: var(--accent); }
   margin: 0 auto;
   padding: 8rem var(--gutter);
 }
+.pocket-text { grid-area: text; }
+.phone-fit { grid-area: phone; }
+.scene-pocket > .features { grid-area: features; justify-self: stretch; }
 .pocket-text p {
   margin-top: 1.25rem;
   max-width: 32rem;
   font-size: 1.15rem;
   color: var(--muted);
 }
+
+.motion .scene-pocket { grid-template-areas: "copy phone"; }
+.motion .pocket-text,
+.motion .scene-pocket > .features { grid-area: copy; }
 
 /* While pinned, the phone has to fit the screen's height. main.js works out --fit
    (1 = full size). scale shrinks the picture; the negative margins shrink the space it takes. */
@@ -504,22 +520,131 @@ a { color: var(--accent); }
 
 /* the new row opens from nothing at the top of the list, pushing the others down */
 .motion .row-new {
+  --row-show: var(--grow);
   display: flex;
   max-height: calc(var(--grow) * 60px);
   padding-block: calc(var(--grow) * 9px);
   overflow: hidden;
-  opacity: var(--grow);
 }
 .motion .row-new + .row { border-top-color: rgb(229 229 234 / var(--grow)); }
 .motion .measuring .row-new { display: none; }
 
+/* ---------- Scene 3, 02. See every stage at a glance ---------- */
+/* A spotlight moves from Wishlist (0) to Rejected (4). Rows and badges whose --stage is
+   near it stay bright and grow a little; the rest dim. */
+.motion .story {
+  --focus: calc(clamp(0, (var(--demo-2) - 0.1) / 0.75, 1) * 4);
+  --dim: min(clamp(0, var(--demo-2) / 0.1, 1), clamp(0, (1 - var(--demo-2)) / 0.1, 1));
+}
+.motion .row,
+.motion .feature-visual.badges .badge {
+  --d: calc(var(--focus) - var(--stage, 0));
+  --near: clamp(0, 1 - max(var(--d), -1 * var(--d)) * 1.25, 1);   /* 1 in the spotlight, 0 a stage away */
+}
+.motion .row { opacity: calc(var(--row-show, 1) * (1 - var(--dim) * (1 - var(--near)) * 0.7)); }
+.motion .row .badge,
+.motion .feature-visual.badges .badge { scale: calc(1 + var(--dim) * var(--near) * 0.2); }
+.motion .feature-visual.badges .badge { opacity: calc(1 - var(--dim) * (1 - var(--near)) * 0.7); }
+
+/* ---------- Scene 3, 03. No account, works offline ---------- */
+/* Wi-Fi turns into airplane mode, and a note says everything is still saved. */
+.status-icons {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.status-icons svg { width: 15px; height: 11px; fill: var(--ink); }
+.plane,
+.toast { display: none; }
+
+.motion .story {
+  --offline: clamp(0, (var(--demo-3) - 0.1) / 0.15, 1);
+  --toast: clamp(0, (var(--demo-3) - 0.35) / 0.15, 1);
+}
+.motion .wifi { opacity: calc(1 - var(--offline)); scale: calc(1 - var(--offline) * 0.4); }
+.motion .plane {
+  display: block;
+  position: absolute;
+  left: 1px;
+  width: 13px;
+  height: 13px;
+  rotate: 90deg;
+  opacity: var(--offline);
+  scale: calc(0.6 + var(--offline) * 0.4);
+}
+.motion .toast {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  position: absolute;
+  inset: auto 16px 26px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 12px;
+  color: #fff;
+  background: rgb(28 28 30 / 0.88);
+  opacity: var(--toast);
+  translate: 0 calc((1 - var(--toast)) * 16px);
+}
+.toast small { font-size: 10px; color: rgb(255 255 255 / 0.7); }
+
+/* ---------- Scene 3: the captions beside the phone ---------- */
+/* The three "What it does" items take turns, each while the phone acts it out. */
+.motion .story {
+  --cap-1: min(clamp(0, var(--demo-1) / 0.08, 1), clamp(0, 1 - var(--demo-2) / 0.08, 1));
+  --cap-2: min(clamp(0, var(--demo-2) / 0.08, 1), clamp(0, 1 - var(--demo-3) / 0.08, 1));
+  --cap-3: clamp(0, var(--demo-3) / 0.08, 1);
+}
+.motion .scene-pocket > .features { padding: 0; }
+.motion .features > h2 {
+  /* hidden from view, still read by screen readers */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.motion .feature-list { display: grid; margin: 0; }
+.motion .feature {
+  grid-area: 1 / 1;   /* all three in the same spot */
+  display: block;
+  padding: 0;
+  border: 0;
+  opacity: var(--cap);
+  translate: 0 calc((1 - var(--cap)) * 1.5rem);
+}
+.motion .feature:nth-child(1) { --cap: var(--cap-1); }
+.motion .feature:nth-child(2) { --cap: var(--cap-2); }
+.motion .feature:nth-child(3) { --cap: var(--cap-3); }
+.motion .feature-number { display: block; margin-bottom: 0.75rem; }
+.motion .feature h3 {
+  font-size: clamp(1.9rem, 4.5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+.motion .feature p { margin-top: 1.25rem; max-width: 32rem; font-size: 1.15rem; }
+.motion .feature-visual { display: none; }
+/* 02 and 03 keep their badges and pills under the caption, lit in step with the phone */
+.motion .feature-visual.badges,
+.motion .feature-visual.pills { display: flex; justify-content: flex-start; margin-top: 1.5rem; }
+.motion .feature-visual.pills span {
+  --on: clamp(0, (var(--demo-3) - 0.2 - var(--i) * 0.15) / 0.1, 1);
+  opacity: calc(0.25 + 0.75 * var(--on));
+}
+.motion .feature-visual.pills span:nth-child(1) { --i: 0; }
+.motion .feature-visual.pills span:nth-child(2) { --i: 1; }
+.motion .feature-visual.pills span:nth-child(3) { --i: 2; }
+
 /* ---------- 4. What it does ---------- */
-.features,
 .learning {
   max-width: 1040px;
   margin: 0 auto;
   padding: 6rem var(--gutter);
 }
+.features { padding-top: 2rem; }   /* sits inside the pocket scene, which has the page's side padding */
 .feature-list {
   margin: 2.5rem 0 0;
   padding: 0;
@@ -645,17 +770,24 @@ a { color: var(--accent); }
 
   .scene-pocket {
     grid-template-columns: 1fr;
+    grid-template-areas: "text" "phone" "features";
     justify-items: center;
     padding-block: 5rem;
   }
   /* pinned on a phone: the text sits above the phone, so both have to fit one screen */
   .motion .scene-pocket {
+    grid-template-areas: "copy" "phone";
     align-content: center;
     gap: 1rem;
     padding: 4.5rem var(--gutter) 1rem;
   }
-  .motion .pocket-text h2 { font-size: 1.5rem; }
-  .motion .pocket-text p { margin-top: 0.5rem; font-size: 0.95rem; }
+  .motion .pocket-text h2,
+  .motion .feature h3 { font-size: 1.5rem; }
+  .motion .pocket-text p,
+  .motion .feature p { margin-top: 0.5rem; font-size: 0.95rem; }
+  .motion .feature-number { margin-bottom: 0.25rem; }
+  .motion .feature-visual.badges,
+  .motion .feature-visual.pills { margin-top: 0.75rem; }
 
   .feature { grid-template-columns: 2.5rem 1fr; }
   .feature-visual { grid-column: 2; justify-self: start; }

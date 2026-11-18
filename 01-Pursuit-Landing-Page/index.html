@@ -90,37 +90,45 @@
         <div class="phone-fit">
         <div class="phone" role="img" aria-label="The Pursuit app's main screen: a list of five job applications, each with a coloured status">
         <div class="screen">
-          <div class="screen-status"><span>9:41</span><span class="island"></span><span class="battery"></span></div>
+          <div class="screen-status">
+            <span>9:41</span><span class="island"></span>
+            <span class="status-icons">
+              <!-- Wi-Fi, swapped for airplane mode in scene 3, 03 -->
+              <svg class="wifi" viewBox="0 0 16 12"><path d="M8 11.6 5.7 9.2a3.3 3.3 0 0 1 4.6 0Z"/><path d="M3.5 6.9a6.4 6.4 0 0 1 9 0l-1.1 1.1a4.8 4.8 0 0 0-6.8 0Z"/><path d="M1.2 4.6a9.6 9.6 0 0 1 13.6 0l-1.1 1.1a8 8 0 0 0-11.4 0Z"/></svg>
+              <svg class="plane" viewBox="0 0 16 16"><path d="M15.2 8.7V7.3L9.6 4.3V1.6a1.6 1.6 0 0 0-3.2 0v2.7L.8 7.3v1.4l5.6-1.5v3.3L4.8 11.6v1.1L8 11.9l3.2.8v-1.1l-1.6-1.1V7.2Z"/></svg>
+              <span class="battery"></span>
+            </span>
+          </div>
           <div class="screen-toolbar"><span class="plus">+</span></div>
           <p class="screen-title">Pursuit</p>
           <ul class="rows">
             <!-- logged during the demo (scene 3), so it stays hidden until then -->
-            <li class="row row-new">
+            <li class="row row-new" style="--stage: 1">
               <span class="avatar" style="--avatar: var(--ios-brown)">P</span>
               <span class="row-text"><b>SDE Intern</b><small>PhonePe · Bengaluru</small></span>
               <span class="row-meta"><span class="badge" style="--color: var(--applied)">Applied</span><small>18 Nov</small></span>
             </li>
-            <li class="row">
+            <li class="row" style="--stage: 0">
               <span class="avatar" style="--avatar: var(--ios-blue)">A</span>
               <span class="row-text"><b>Graduate Engineer</b><small>Atlassian</small></span>
               <span class="row-meta"><span class="badge" style="--color: var(--wishlist)">Wishlist</span><small>16 Nov</small></span>
             </li>
-            <li class="row">
+            <li class="row" style="--stage: 2">
               <span class="avatar" style="--avatar: var(--ios-purple)">S</span>
               <span class="row-text"><b>iOS Developer Intern</b><small>Swiggy · Bengaluru</small></span>
               <span class="row-meta"><span class="badge" style="--color: var(--interviewing)">Interviewing</span><small>14 Nov</small></span>
             </li>
-            <li class="row">
+            <li class="row" style="--stage: 1">
               <span class="avatar" style="--avatar: var(--ios-blue)">R</span>
               <span class="row-text"><b>Software Engineer I</b><small>Razorpay · Remote</small></span>
               <span class="row-meta"><span class="badge" style="--color: var(--applied)">Applied</span><small>11 Nov</small></span>
             </li>
-            <li class="row">
+            <li class="row" style="--stage: 3">
               <span class="avatar" style="--avatar: var(--ios-blue)">Z</span>
               <span class="row-text"><b>Mobile Engineer</b><small>Zoho · Chennai</small></span>
               <span class="row-meta"><span class="badge" style="--color: var(--offer)">Offer</span><small>27 Oct</small></span>
             </li>
-            <li class="row">
+            <li class="row" style="--stage: 4">
               <span class="avatar" style="--avatar: var(--ios-teal)">F</span>
               <span class="row-text"><b>SDE Intern</b><small>Flipkart · Bengaluru</small></span>
               <span class="row-meta"><span class="badge" style="--color: var(--rejected)">Rejected</span><small>18 Oct</small></span>
@@ -148,58 +156,62 @@
               <div class="field"><span class="placeholder">Referral, recruiter, salary range…</span></div>
             </div>
           </div>
+
+          <!-- Scene 3, 03: airplane mode, and nothing is lost -->
+          <div class="toast"><b>✓ Saved on this iPhone</b><small>No account, no internet needed</small></div>
         </div>
         </div>
         </div>
+
+        <!-- Scene 3: what it does. Each item is the caption beside the phone while the phone acts it out. -->
+        <section class="features" aria-labelledby="features-title">
+          <h2 id="features-title">What it does</h2>
+          <ol class="feature-list">
+            <li class="feature">
+              <span class="feature-number" aria-hidden="true">01</span>
+              <div class="feature-text">
+                <h3>Log an application</h3>
+                <p>Company, role, date and a short note. It takes a few seconds.</p>
+              </div>
+              <div class="feature-visual mini-form" aria-hidden="true">
+                <span><small>Company</small>Swiggy</span>
+                <span><small>Role</small>iOS Developer Intern</span>
+                <span><small>Status</small><em class="badge" style="--color: var(--interviewing)">Interviewing</em></span>
+              </div>
+            </li>
+            <li class="feature">
+              <span class="feature-number" aria-hidden="true">02</span>
+              <div class="feature-text">
+                <h3>See every stage at a glance</h3>
+                <p>Five colours, from Wishlist to Offer, show where each application stands.</p>
+              </div>
+              <div class="feature-visual badges" aria-hidden="true">
+                <span class="badge" style="--color: var(--wishlist); --stage: 0">Wishlist</span>
+                <span class="badge" style="--color: var(--applied); --stage: 1">Applied</span>
+                <span class="badge" style="--color: var(--interviewing); --stage: 2">Interviewing</span>
+                <span class="badge" style="--color: var(--offer); --stage: 3">Offer</span>
+                <span class="badge" style="--color: var(--rejected); --stage: 4">Rejected</span>
+              </div>
+            </li>
+            <li class="feature">
+              <span class="feature-number" aria-hidden="true">03</span>
+              <div class="feature-text">
+                <h3>No account. Works offline.</h3>
+                <p>Everything is saved on your phone. Nothing to sign up for, nothing sent anywhere.</p>
+              </div>
+              <div class="feature-visual pills" aria-hidden="true">
+                <span>No sign-up</span>
+                <span>No internet needed</span>
+                <span>Saved on your phone</span>
+              </div>
+            </li>
+          </ol>
+        </section>
       </div>
 
       </div>
     </section>
 
-    <!-- 4. What it does -->
-    <section class="features" aria-labelledby="features-title">
-      <h2 id="features-title">What it does</h2>
-      <ol class="feature-list">
-        <li class="feature">
-          <span class="feature-number" aria-hidden="true">01</span>
-          <div class="feature-text">
-            <h3>Log an application</h3>
-            <p>Company, role, date and a short note. It takes a few seconds.</p>
-          </div>
-          <div class="feature-visual mini-form" aria-hidden="true">
-            <span><small>Company</small>Swiggy</span>
-            <span><small>Role</small>iOS Developer Intern</span>
-            <span><small>Status</small><em class="badge" style="--color: var(--interviewing)">Interviewing</em></span>
-          </div>
-        </li>
-        <li class="feature">
-          <span class="feature-number" aria-hidden="true">02</span>
-          <div class="feature-text">
-            <h3>See every stage at a glance</h3>
-            <p>Five colours, from Wishlist to Offer, show where each application stands.</p>
-          </div>
-          <div class="feature-visual badges" aria-hidden="true">
-            <span class="badge" style="--color: var(--wishlist)">Wishlist</span>
-            <span class="badge" style="--color: var(--applied)">Applied</span>
-            <span class="badge" style="--color: var(--interviewing)">Interviewing</span>
-            <span class="badge" style="--color: var(--offer)">Offer</span>
-            <span class="badge" style="--color: var(--rejected)">Rejected</span>
-          </div>
-        </li>
-        <li class="feature">
-          <span class="feature-number" aria-hidden="true">03</span>
-          <div class="feature-text">
-            <h3>No account. Works offline.</h3>
-            <p>Everything is saved on your phone. Nothing to sign up for, nothing sent anywhere.</p>
-          </div>
-          <div class="feature-visual pills" aria-hidden="true">
-            <span>No sign-up</span>
-            <span>No internet needed</span>
-            <span>Saved on your phone</span>
-          </div>
-        </li>
-      </ol>
-    </section>
 
     <!-- 5. Made while learning -->
     <section class="learning" aria-labelledby="learning-title">

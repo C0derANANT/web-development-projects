@@ -10,7 +10,11 @@ scroll, twelve messy job applications sort themselves into the app's five stages
 
 - **The Sort:** a pile of tilted paper notes sorts itself into Wishlist, Applied, Interviewing, Offer and Rejected as you scroll, and each note takes its stage colour as it lands
 - **Into the phone:** once sorted, the whole board shrinks and flies onto the app's list, and the phone frame closes around it
-- **One pinned story:** the sort and the phone share one pinned section, so each scene hands over to the next
+- **The app shows itself:** the phone stays pinned and acts out each feature while its caption changes beside it:
+  - **01 Log an application:** "+" opens the New Application sheet, PhonePe gets typed in, and the new row opens at the top of the list
+  - **02 Every stage at a glance:** a spotlight moves from Wishlist to Rejected, in the list and in the badges under the caption
+  - **03 No account, works offline:** Wi-Fi turns into airplane mode, and a note says everything is still saved
+- **One pinned story:** the sort, the phone and the demo share one pinned section, so each scene hands over to the next
 - **A constellation when a scene settles:** the moving background from my [MathWIZ](../02-MathWIZ) project, here in the five stage colours, fades in behind a scene once it has finished moving
 - **Small touches:** stage names appear letter by letter
 - **Works on phones:** on small screens the stages become rows instead of columns
@@ -26,8 +30,8 @@ Each note has two places:
 
 While the story is pinned, StringTune turns the scroll position into one number,
 `--story`, that goes from 0 to 1. The CSS cuts it into scenes, each with its own
-0 to 1: the first half is `--sort`, and later `--handoff` runs the flight into the
-phone. The sort blends the two places with `--sort`:
+0 to 1: first `--sort`, then `--handoff` for the flight into the phone, then
+`--demo-1` to `--demo-3` for the app demo. The sort blends the two places with `--sort`:
 
 ```css
 left: calc(var(--messy-left) * (1 - var(--q)) + var(--tidy-left) * var(--q));
@@ -80,6 +84,8 @@ One commit per step, so the history shows the order:
 6. README
 7. The sort and the phone joined into one pinned story
 8. The sorted board flies into the phone, and a constellation appears as scenes settle
+9. The phone logs an application: the form slides up and gets typed in
+10. The phone shows every stage and works offline, with the feature captions beside it
 
 ## 🎨 Inspiration
 

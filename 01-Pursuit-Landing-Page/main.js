@@ -26,6 +26,7 @@ function setUpStory() {
   const story = document.querySelector('.story');
   const pin = story.querySelector('.story-pin');
   const pocketText = story.querySelector('.pocket-text');
+  const captions = story.querySelector('.feature-list');   // shares the text's spot, so the taller one counts
   const board = story.querySelector('.board');
   const phone = story.querySelector('.phone');
   const rows = phone.querySelector('.rows');
@@ -34,8 +35,9 @@ function setUpStory() {
 
   // How much to shrink the phone so it fits the screen while pinned (1 = full size)
   function fitPhone() {
+    const copyHeight = Math.max(pocketText.offsetHeight, captions.offsetHeight);
     const space = stacked.matches
-      ? pin.clientHeight - pocketText.offsetHeight - 120   // room left under the text, the top bar and the gaps
+      ? pin.clientHeight - copyHeight - 120                // room left under the text, the top bar and the gaps
       : pin.clientHeight - 140;                            // room left under the top bar, with a little below
     const fit = Math.min(1, Math.max(0.4, space / PHONE_HEIGHT));
     story.style.setProperty('--fit', fit.toFixed(3));
