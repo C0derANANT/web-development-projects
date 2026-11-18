@@ -9,8 +9,10 @@ scroll, twelve messy job applications sort themselves into the app's five stages
 ## ✨ Features
 
 - **The Sort:** a pile of tilted paper notes sorts itself into Wishlist, Applied, Interviewing, Offer and Rejected as you scroll, and each note takes its stage colour as it lands
-- **Pinned scroll section:** the board stays on screen while scrolling drives the animation
-- **Small touches:** stage names appear letter by letter, and the phone drifts a little slower than the page
+- **Into the phone:** once sorted, the whole board shrinks and flies onto the app's list, and the phone frame closes around it
+- **One pinned story:** the sort and the phone share one pinned section, so each scene hands over to the next
+- **A constellation when a scene settles:** the moving background from my [MathWIZ](../02-MathWIZ) project, here in the five stage colours, fades in behind a scene once it has finished moving
+- **Small touches:** stage names appear letter by letter
 - **Works on phones:** on small screens the stages become rows instead of columns
 - **Accessible fallback:** if the device asks for reduced motion, or a library fails to load, the page shows everything already sorted
 - **No build step:** plain HTML, CSS and JavaScript
@@ -22,8 +24,10 @@ Each note has two places:
 - a **messy** spot in the pile and a tilt, written in the HTML as `--x`, `--y` and `--tilt`
 - a **tidy** spot, worked out from its stage (the column) and its slot (the row)
 
-While the section is pinned, StringTune turns the scroll position into one number,
-`--sort`, that goes from 0 to 1. The CSS blends the two places with it:
+While the story is pinned, StringTune turns the scroll position into one number,
+`--story`, that goes from 0 to 1. The CSS cuts it into scenes, each with its own
+0 to 1: the first half is `--sort`, and later `--handoff` runs the flight into the
+phone. The sort blends the two places with `--sort`:
 
 ```css
 left: calc(var(--messy-left) * (1 - var(--q)) + var(--tidy-left) * var(--q));
@@ -38,18 +42,20 @@ small screens the same formula runs with the axes swapped.
 | Purpose                               | Tool                                                     |
 | ------------------------------------- | -------------------------------------------------------- |
 | Page structure                        | HTML                                                     |
-| Layout and the sort animation         | CSS custom properties, `calc()`, `clamp()`, `color-mix()` |
+| Layout, the sort and the flight       | CSS custom properties, `calc()`, `clamp()`, `color-mix()`, `min()`/`max()` |
+| Measuring the flight into the phone   | JavaScript: `getBoundingClientRect()`, resize handling   |
 | Smooth scrolling                      | [Lenis](https://lenis.dev/) 1.3.27                       |
-| Scroll progress, split text, parallax | [StringTune](https://string-tune.fiddle.digital/) 1.2.7  |
+| Scroll progress, split text           | [StringTune](https://string-tune.fiddle.digital/) 1.2.7  |
+| Constellation background              | [particles.js](https://vincentgarreau.com/particles.js/) 2.0.0, as in MathWIZ |
 | Hosting                               | GitHub Pages                                             |
 
 ## 📁 Project Structure
 
 ```
 01-Pursuit-Landing-Page/
-├── index.html    # The page: five sections, each note with its messy spot
-├── style.css     # Layout, the sort formula, small-screen layout
-├── main.js       # Starts Lenis and StringTune, or falls back to the sorted page
+├── index.html    # The page: the pinned story (sort + phone), features, made while learning
+├── style.css     # Layout, the scenes, the sort and flight formulas, small-screen layout
+├── main.js       # Starts the libraries, measures the flight, runs the constellation, or falls back
 └── favicon.svg   # Tab icon
 ```
 
@@ -60,7 +66,7 @@ cd 01-Pursuit-Landing-Page
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000>. No installs needed; both libraries load from jsDelivr.
+Then open <http://localhost:8000>. No installs needed; the libraries load from jsDelivr.
 
 ## 🪜 How it was built
 
@@ -72,7 +78,10 @@ One commit per step, so the history shows the order:
 4. The sort connected to scrolling with StringTune
 5. Phone parallax, small screens and the no-animation fallback
 6. README
+7. The sort and the phone joined into one pinned story
+8. The sorted board flies into the phone, and a constellation appears as scenes settle
 
 ## 🎨 Inspiration
 
-[lenis.dev](https://lenis.dev/) and [StringTune](https://string-tune.fiddle.digital/).
+[lenis.dev](https://lenis.dev/), [StringTune](https://string-tune.fiddle.digital/), and the way
+[buttermax.net](https://buttermax.net/) lets one scene turn into the next.

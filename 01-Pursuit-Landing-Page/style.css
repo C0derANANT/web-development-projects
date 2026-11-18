@@ -163,9 +163,15 @@ a { color: var(--accent); }
   /* StringTune replaces --story with the real value, 0 to 1, as you scroll.
      Each scene is a slice of it that goes from 0 to 1 in its own part of the scroll. */
   --story: 0;
-  --sort: clamp(0, var(--story) / 0.55, 1);             /* scene 1, the sort: 0% to 55% */
+  --sort: clamp(0, var(--story) / 0.5, 1);              /* scene 1, the sort: 0% to 50% */
   --handoff: clamp(0, (var(--story) - 0.62) / 0.3, 1);  /* into the phone: 62% to 92% */
-  height: 450vh;  /* 3.5 screens of scrolling while the story stays pinned */
+  height: 500vh;  /* 4 screens of scrolling while the story stays pinned */
+
+  /* How settled the story is: 1 when a scene has just finished, 0 while things move.
+     The constellation behind the scenes uses it. */
+  --settle-1: min(clamp(0, (var(--sort) - 0.85) / 0.15, 1), clamp(0, 1 - var(--handoff) / 0.15, 1));
+  --settle-2: clamp(0, (var(--handoff) - 0.85) / 0.15, 1);
+  --settled: max(var(--settle-1), var(--settle-2));
 }
 .motion .story-pin {
   position: sticky; /* stays on screen while the tall section scrolls past */
@@ -177,9 +183,54 @@ a { color: var(--accent); }
 }
 .motion .scene { grid-area: 1 / 1; min-height: 0; }
 
-/* for now the sort fades out and the phone fades in */
-.motion .scene-sort { opacity: calc(1 - var(--handoff)); }
-.motion .scene-pocket { opacity: var(--handoff); }
+.motion .scene-sort { z-index: 1; }   /* the flying board passes in front of the phone */
+
+/* The constellation: MathWIZ's moving background, drawn by particles.js in the stage colours.
+   It fades in only while a scene has just settled. */
+.constellation { display: none; }
+.motion .constellation {
+  display: block;
+  grid-area: 1 / 1;
+  opacity: var(--settled);
+  pointer-events: none;
+}
+
+/* ---------- Into the phone: the sorted board flies onto the phone's list ---------- */
+/* main.js measures how far the board must travel (--fly-x, --fly-y) and how much it must
+   shrink (--fly-s) to land exactly on the phone's list. */
+.motion .story {
+  --fly: clamp(0, var(--handoff) / 0.75, 1);                  /* the flight takes the first 3/4 */
+  --e: calc(var(--fly) * var(--fly) * (3 - 2 * var(--fly)));  /* eased: starts slow, ends slow */
+  --swap: clamp(0, (var(--handoff) - 0.5) / 0.25, 1);         /* as it lands, the board turns into the list */
+  --text-in: clamp(0, (var(--handoff) - 0.65) / 0.3, 1);
+}
+.motion .sort-titles { opacity: clamp(0, 1 - var(--handoff) * 4, 1); }
+.motion .board {
+  translate: calc(var(--fly-x, 0px) * var(--e)) calc(var(--fly-y, 0px) * var(--e));
+  scale: calc(1 + (var(--fly-s, 1) - 1) * var(--e));
+  opacity: calc(1 - var(--swap));
+}
+
+/* The phone starts as big as the board and in the same place, so the board sits on its list.
+   Then both shrink together, and the phone frame closes around the board.
+   It grows and shrinks around the middle of its list (--rows-x, --rows-y). */
+.motion .phone {
+  transform-origin: var(--rows-x, 50%) var(--rows-y, 50%);
+  translate:
+    calc(var(--fly-x, 0px) / var(--fit, 1) * (var(--e) - 1))
+    calc(var(--fly-y, 0px) / var(--fit, 1) * (var(--e) - 1));
+  scale: calc(1 + (1 / var(--fly-s, 1) - 1) * (1 - var(--e)));
+  opacity: clamp(0, (var(--handoff) - 0.1) / 0.4, 1);
+}
+.motion .rows { opacity: var(--swap); }
+.motion .pocket-text {
+  opacity: var(--text-in);
+  translate: 0 calc((1 - var(--text-in)) * 1.5rem);
+}
+
+/* main.js adds .measuring for a moment, to see where everything sits before the flight */
+.motion .measuring .board,
+.motion .measuring .phone { translate: none; scale: none; }
 
 /* the question fades out as the notes start moving, the answer fades in at the end */
 .motion .sort-titles { display: grid; }

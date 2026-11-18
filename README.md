@@ -5,7 +5,7 @@ scroll animation and responsive layouts.
 
 | # | Project | What it does | Tech |
 |---|---------|--------------|------|
-| 01 | [Pursuit Landing Page](01-Pursuit-Landing-Page) | One-page site for my Pursuit iPhone app: messy job applications sort themselves into stages as you scroll | HTML, CSS, JavaScript, Lenis, StringTune |
+| 01 | [Pursuit Landing Page](01-Pursuit-Landing-Page) | One-page site for my Pursuit iPhone app: messy job applications sort themselves into stages as you scroll | HTML, CSS, JavaScript, Lenis, StringTune, particles.js |
 | 02 | [MathWIZ](02-MathWIZ) | A maths lab: number series generator, GeoGebra graph plotter and rotating 3D shapes | HTML, CSS, JavaScript, GeoGebra, Three.js, particles.js |
 
 ## 🚀 Running a project

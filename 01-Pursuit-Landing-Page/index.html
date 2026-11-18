@@ -32,6 +32,9 @@
       string-exit-el="bottom" string-exit-vp="bottom">
       <div class="story-pin">
 
+      <!-- MathWIZ's moving constellation, shown behind a scene once it settles -->
+      <div class="constellation" id="constellation" aria-hidden="true"></div>
+
       <!-- Scene 1: the mess, then the sort -->
       <div class="scene scene-sort">
         <div class="sort-titles">
@@ -185,11 +188,12 @@
   </main>
 
   <footer class="footer">
-    <p>Made by Anant. Smooth scrolling by <a href="https://lenis.dev/">Lenis</a>, scroll effects by <a href="https://string-tune.fiddle.digital/">StringTune</a>.</p>
+    <p>Made by Anant. Smooth scrolling by <a href="https://lenis.dev/">Lenis</a>, scroll effects by <a href="https://string-tune.fiddle.digital/">StringTune</a>, constellation by <a href="https://vincentgarreau.com/particles.js/">particles.js</a>.</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fiddle-digital/string-tune@1.2.7/dist/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0"></script>
   <script src="main.js"></script>
 </body>
 </html>
