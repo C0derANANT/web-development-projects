@@ -12,6 +12,7 @@
   --ios-blue: #007aff;
   --ios-purple: #af52de;
   --ios-teal: #30b0c7;
+  --ios-brown: #a2845e;
 
   --ink: #1c1c1e;
   --muted: #6e6e73;
@@ -163,15 +164,23 @@ a { color: var(--accent); }
   /* StringTune replaces --story with the real value, 0 to 1, as you scroll.
      Each scene is a slice of it that goes from 0 to 1 in its own part of the scroll. */
   --story: 0;
-  --sort: clamp(0, var(--story) / 0.5, 1);              /* scene 1, the sort: 0% to 50% */
-  --handoff: clamp(0, (var(--story) - 0.62) / 0.3, 1);  /* into the phone: 62% to 92% */
-  height: 500vh;  /* 4 screens of scrolling while the story stays pinned */
 
-  /* How settled the story is: 1 when a scene has just finished, 0 while things move.
+  /* --at is how far into the story you are, measured in vh of scrolling (535 in all).
+     Each scene runs between two of those marks, with a short pause after it. */
+  --at: calc(var(--story) * 535);
+  --sort: clamp(0, var(--at) / 200, 1);              /* scene 1, the sort:  0 - 200 */
+  --handoff: clamp(0, (var(--at) - 240) / 110, 1);   /* into the phone:   240 - 350 */
+  --demo-1: clamp(0, (var(--at) - 385) / 120, 1);    /* 01, log one:      385 - 505 */
+  height: calc(535vh + 100vh);  /* the scrolling, plus the screen the pin fills */
+
+  /* How settled the story is: 1 in the pause after a scene, 0 while things move.
+     A scene counts as done once it is 85% through, and the next waits until it is 15% in.
      The constellation behind the scenes uses it. */
-  --settle-1: min(clamp(0, (var(--sort) - 0.85) / 0.15, 1), clamp(0, 1 - var(--handoff) / 0.15, 1));
-  --settle-2: clamp(0, (var(--handoff) - 0.85) / 0.15, 1);
-  --settled: max(var(--settle-1), var(--settle-2));
+  --settled: max(
+    min(clamp(0, (var(--sort) - 0.85) / 0.15, 1),    clamp(0, 1 - var(--handoff) / 0.15, 1)),
+    min(clamp(0, (var(--handoff) - 0.85) / 0.15, 1), clamp(0, 1 - var(--demo-1) / 0.15, 1)),
+    clamp(0, (var(--demo-1) - 0.85) / 0.15, 1)
+  );
 }
 .motion .story-pin {
   position: sticky; /* stays on screen while the tall section scrolls past */
@@ -402,6 +411,107 @@ a { color: var(--accent); }
   color: var(--color);
   background: color-mix(in srgb, var(--color) 15%, transparent);
 }
+
+/* ---------- Scene 3, 01. Log an application ---------- */
+/* "+" opens the New Application sheet, PhonePe gets typed in, Save closes it, and the new row
+   opens at the top of the list. Without motion none of this shows; the phone just shows the list. */
+.row-new,
+.sheet,
+.sheet-dim { display: none; }
+
+.motion .story {
+  /* small timelines inside --demo-1, each going 0 to 1 (or up and back down for a tap) */
+  --tap-plus: clamp(0, min(var(--demo-1) / 0.04, (0.08 - var(--demo-1)) / 0.04), 1);
+  --sheet: min(clamp(0, (var(--demo-1) - 0.06) / 0.14, 1), clamp(0, (0.88 - var(--demo-1)) / 0.12, 1));
+  --can-save: clamp(0, (var(--demo-1) - 0.39) * 100, 1);   /* Save works once Company and Role have text */
+  --tap-save: clamp(0, min((var(--demo-1) - 0.69) / 0.035, (0.76 - var(--demo-1)) / 0.035), 1);
+  --grow: clamp(0, (var(--demo-1) - 0.86) / 0.12, 1);
+}
+
+.motion .screen { position: relative; }
+.motion .plus {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) calc(var(--tap-plus) * 18%), transparent);
+  scale: calc(1 - var(--tap-plus) * 0.12);
+}
+
+.motion .sheet-dim {
+  display: block;
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / calc(var(--sheet) * 0.25));
+}
+.motion .sheet {
+  --sheet-e: calc(var(--sheet) * var(--sheet) * (3 - 2 * var(--sheet)));   /* eased */
+  display: block;
+  position: absolute;
+  inset: 50px 0 0;
+  padding: 0 14px;
+  font-size: 13px;
+  background: #f2f2f7;
+  border-radius: 14px 14px 0 0;
+  box-shadow: 0 -2px 18px rgb(0 0 0 / 0.12);
+  translate: 0 calc((1 - var(--sheet-e)) * 105%);
+}
+.sheet-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 50px;
+}
+.sheet-bar > span:first-child { color: var(--accent); }
+.sheet-bar .save {
+  justify-self: end;
+  margin-right: -8px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--accent) calc(var(--can-save) * 100%), #c4c4c6);   /* grey until it can save */
+  background: color-mix(in srgb, var(--accent) calc(var(--tap-save) * 18%), transparent);
+}
+.sheet-label {
+  margin: 12px 12px 6px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a8a8e;
+}
+.sheet-group { background: #fff; border-radius: 10px; }
+.field {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 12px;
+}
+.field + .field { border-top: 1px solid #e5e5ea; }
+.field .placeholder { color: #c4c4c6; }
+.typed + .placeholder { position: absolute; left: 12px; }
+.field-value { color: #8a8a8e; }
+.date { padding: 3px 8px; border-radius: 6px; background: #eeeef0; }
+
+/* typing: --t runs 0 to 1 between the field's --from and --to, and each letter
+   (numbered by StringSplit, spaces not counted) shows once --t has passed it */
+.motion .field[style] { --t: clamp(0, (var(--demo-1) - var(--from)) / (var(--to) - var(--from)), 1); }
+.motion .typed .-s-char { opacity: clamp(0, var(--t) * var(--len) - var(--char-index), 1); }
+.motion .typed + .placeholder { opacity: calc(1 - clamp(0, var(--t) * 100, 1)); }
+
+/* the new row opens from nothing at the top of the list, pushing the others down */
+.motion .row-new {
+  display: flex;
+  max-height: calc(var(--grow) * 60px);
+  padding-block: calc(var(--grow) * 9px);
+  overflow: hidden;
+  opacity: var(--grow);
+}
+.motion .row-new + .row { border-top-color: rgb(229 229 234 / var(--grow)); }
+.motion .measuring .row-new { display: none; }
 
 /* ---------- 4. What it does ---------- */
 .features,

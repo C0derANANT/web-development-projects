@@ -94,6 +94,12 @@
           <div class="screen-toolbar"><span class="plus">+</span></div>
           <p class="screen-title">Pursuit</p>
           <ul class="rows">
+            <!-- logged during the demo (scene 3), so it stays hidden until then -->
+            <li class="row row-new">
+              <span class="avatar" style="--avatar: var(--ios-brown)">P</span>
+              <span class="row-text"><b>SDE Intern</b><small>PhonePe · Bengaluru</small></span>
+              <span class="row-meta"><span class="badge" style="--color: var(--applied)">Applied</span><small>18 Nov</small></span>
+            </li>
             <li class="row">
               <span class="avatar" style="--avatar: var(--ios-blue)">A</span>
               <span class="row-text"><b>Graduate Engineer</b><small>Atlassian</small></span>
@@ -120,6 +126,28 @@
               <span class="row-meta"><span class="badge" style="--color: var(--rejected)">Rejected</span><small>18 Oct</small></span>
             </li>
           </ul>
+
+          <!-- Scene 3, 01: the "New Application" sheet from AddApplicationView.swift.
+               Each typed value appears letter by letter between its --from and --to. -->
+          <div class="sheet-dim"></div>
+          <div class="sheet">
+            <div class="sheet-bar"><span>Cancel</span><b>New Application</b><span class="save">Save</span></div>
+            <p class="sheet-label">Job</p>
+            <div class="sheet-group">
+              <div class="field" style="--from: 0.22; --to: 0.34; --len: 7"><span class="typed" string="split" string-split="char">PhonePe</span><span class="placeholder">Company</span></div>
+              <div class="field" style="--from: 0.38; --to: 0.52; --len: 9"><span class="typed" string="split" string-split="char">SDE Intern</span><span class="placeholder">Role</span></div>
+              <div class="field" style="--from: 0.55; --to: 0.66; --len: 9"><span class="typed" string="split" string-split="char">Bengaluru</span><span class="placeholder">Location (optional)</span></div>
+            </div>
+            <p class="sheet-label">Progress</p>
+            <div class="sheet-group">
+              <div class="field"><span>Status</span><span class="field-value">Applied ↕</span></div>
+              <div class="field"><span>Date applied</span><span class="date">18 Nov 2026</span></div>
+            </div>
+            <p class="sheet-label">Notes</p>
+            <div class="sheet-group">
+              <div class="field"><span class="placeholder">Referral, recruiter, salary range…</span></div>
+            </div>
+          </div>
         </div>
         </div>
         </div>
