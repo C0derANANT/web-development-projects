@@ -38,10 +38,17 @@ sidebar.addEventListener('click', (e) => {
 
 /* ---------- 2. Pages ---------- */
 
+// A page that keeps running in the background (the 3D viewer) leaves its stop function here.
+let stopCurrentPage = null;
+
 // Each page's HTML lives in a <template id="page-..."> in index.html.
 function loadPage(page) {
   const template = document.getElementById(`page-${page}`);
   if (!template) return;
+  if (stopCurrentPage) {
+    stopCurrentPage();
+    stopCurrentPage = null;
+  }
   content.replaceChildren(template.content.cloneNode(true));
 
   if (page === 'home') showFacts();
@@ -161,6 +168,8 @@ function graphInit() {
 
 function shapesInit() {
   const container = document.getElementById('shapeContainer');
+  if (!container) return;                    // you already left the page
+  if (stopCurrentPage) stopCurrentPage();    // never run two viewers at once
   container.innerHTML = '';
 
   // Scene, camera and renderer
@@ -186,7 +195,11 @@ function shapesInit() {
   // The shape on show
   let mesh;
   function addShape(type) {
-    if (mesh) scene.remove(mesh);
+    if (mesh) {
+      scene.remove(mesh);
+      mesh.geometry.dispose();   // free the old shape's memory on the graphics card
+      mesh.material.dispose();
+    }
     let geometry;
     if (type === 'cube') geometry = new THREE.BoxGeometry(3.6, 3.6, 3.6);
     if (type === 'sphere') geometry = new THREE.SphereGeometry(2.8, 48, 32);
@@ -208,11 +221,23 @@ function shapesInit() {
   window.addEventListener('resize', onResize);
 
   // Spin the shape slowly, every frame
+  let frameId;
   (function animate() {
-    requestAnimationFrame(animate);
+    frameId = requestAnimationFrame(animate);
     if (mesh) { mesh.rotation.y += 0.007; }
     renderer.render(scene, camera);
   })();
+
+  // loadPage calls this when you leave, so the loop, the listener and the WebGL canvas don't pile up
+  stopCurrentPage = () => {
+    cancelAnimationFrame(frameId);
+    window.removeEventListener('resize', onResize);
+    controls.dispose();
+    mesh.geometry.dispose();
+    mesh.material.dispose();
+    renderer.dispose();
+    renderer.forceContextLoss();
+  };
 }
 
 
