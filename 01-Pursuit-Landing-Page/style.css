@@ -39,7 +39,7 @@ h1, h2, h3, p { margin: 0; }
 a { color: var(--accent); }
 
 .title-before,
-.pocket h2,
+.pocket-text h2,
 .features > h2,
 .learning > h2 {
   font-size: clamp(1.9rem, 4.5vw, 3.25rem);
@@ -69,8 +69,9 @@ a { color: var(--accent); }
 }
 .topbar-link { font-weight: 600; text-decoration: none; }
 
-/* ---------- 1 + 2. The sort ---------- */
-.sort-pin {
+/* ---------- 1-3. The story ---------- */
+/* Scene 1: the mess, then the sort */
+.scene-sort {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -158,16 +159,27 @@ a { color: var(--accent); }
 }
 
 /* ---------- The scroll animation (only when <html> has the "motion" class) ---------- */
-.motion .sort {
-  --sort: 0;      /* StringTune replaces this with the real value, 0 to 1, as you scroll */
-  height: 300vh;  /* extra room: the sort plays out over two screens of scrolling */
+.motion .story {
+  /* StringTune replaces --story with the real value, 0 to 1, as you scroll.
+     Each scene is a slice of it that goes from 0 to 1 in its own part of the scroll. */
+  --story: 0;
+  --sort: clamp(0, var(--story) / 0.55, 1);             /* scene 1, the sort: 0% to 55% */
+  --handoff: clamp(0, (var(--story) - 0.62) / 0.3, 1);  /* into the phone: 62% to 92% */
+  height: 450vh;  /* 3.5 screens of scrolling while the story stays pinned */
 }
-.motion .sort-pin {
+.motion .story-pin {
   position: sticky; /* stays on screen while the tall section scrolls past */
   top: 0;
   height: 100vh;
   height: 100svh;
+  display: grid;    /* every scene sits in the same grid cell, one on top of the other */
+  overflow: hidden;
 }
+.motion .scene { grid-area: 1 / 1; min-height: 0; }
+
+/* for now the sort fades out and the phone fades in */
+.motion .scene-sort { opacity: calc(1 - var(--handoff)); }
+.motion .scene-pocket { opacity: var(--handoff); }
 
 /* the question fades out as the notes start moving, the answer fades in at the end */
 .motion .sort-titles { display: grid; }
@@ -203,21 +215,30 @@ a { color: var(--accent); }
   opacity: clamp(0, 1 - var(--sort) * 8, 1);
 }
 
-/* ---------- 3. In your pocket ---------- */
-.pocket {
+/* Scene 2: in your pocket */
+.scene-pocket {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: clamp(2rem, 6vw, 5rem);
+  width: 100%;
   max-width: 1040px;
   margin: 0 auto;
   padding: 8rem var(--gutter);
 }
-.pocket p {
+.pocket-text p {
   margin-top: 1.25rem;
   max-width: 32rem;
   font-size: 1.15rem;
   color: var(--muted);
+}
+
+/* While pinned, the phone has to fit the screen's height. main.js works out --fit
+   (1 = full size). scale shrinks the picture; the negative margins shrink the space it takes. */
+.motion .scene-pocket { padding: 5rem var(--gutter) 2rem; }
+.motion .phone-fit {
+  scale: var(--fit, 1);
+  margin: calc((var(--fit, 1) - 1) * 335px) calc((var(--fit, 1) - 1) * 160px);
 }
 
 /* A drawing of an iPhone, about 3/4 of real size, copying the app's list screen */
@@ -442,7 +463,7 @@ a { color: var(--accent); }
 
 /* ---------- Small screens: stages become rows instead of columns ---------- */
 @media (max-width: 700px) {
-  .sort-pin { gap: 1.75rem; padding-top: 5rem; }
+  .scene-sort { gap: 1.75rem; padding-top: 5rem; }
 
   .board { height: 23rem; }
   .stage-name {
@@ -461,11 +482,19 @@ a { color: var(--accent); }
   .note strong { font-size: 0.85rem; }
   .note span { display: none; }
 
-  .pocket {
+  .scene-pocket {
     grid-template-columns: 1fr;
     justify-items: center;
     padding-block: 5rem;
   }
+  /* pinned on a phone: the text sits above the phone, so both have to fit one screen */
+  .motion .scene-pocket {
+    align-content: center;
+    gap: 1rem;
+    padding: 4.5rem var(--gutter) 1rem;
+  }
+  .motion .pocket-text h2 { font-size: 1.5rem; }
+  .motion .pocket-text p { margin-top: 0.5rem; font-size: 0.95rem; }
 
   .feature { grid-template-columns: 2.5rem 1fr; }
   .feature-visual { grid-column: 2; justify-self: start; }
