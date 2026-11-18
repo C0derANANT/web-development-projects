@@ -82,22 +82,40 @@ function showFacts() {
 
 /* ---------- 4. Series Generator ---------- */
 
+const MAX_TERMS = 500;   // more than this freezes the page for no benefit
+
 function getInputValues() {
   const a = parseFloat(document.getElementById('firstTerm')?.value || '1');
   const d = parseFloat(document.getElementById('common')?.value || '1');
-  const n = parseInt(document.getElementById('terms')?.value || '10');
+  const n = Number(document.getElementById('terms')?.value || '10');   // Number, not parseInt, so 2.5 is caught
   return { a, d, n };
 }
 
-function displaySeries(series, title) {
+// Terms (n) must be a whole number from 1 to MAX_TERMS
+function termsAreValid(n) {
+  if (Number.isInteger(n) && n >= 1 && n <= MAX_TERMS) return true;
+  showMessage(`Terms (n) must be a whole number from 1 to ${MAX_TERMS}.`);
+  return false;
+}
+
+function showMessage(text) {
   const out = document.getElementById('output');
-  if (out) {
-    out.innerHTML = `<h4>${title}</h4><div>${series.join(', ')}</div>`;
+  if (out) out.innerHTML = `<p class="note">${text}</p>`;
+}
+
+function displaySeries(series, title, note = '') {
+  const out = document.getElementById('output');
+  if (!out) return;
+  if (!note && series.some(x => typeof x === 'number' && !Number.isFinite(x))) {
+    note = 'Some terms are too big for JavaScript numbers, so they show as Infinity.';
   }
+  out.innerHTML = `<h4>${title}</h4><div>${series.join(', ')}</div>` +
+    (note ? `<p class="note">${note}</p>` : '');
 }
 
 function generateAP() {
   const { a, d, n } = getInputValues();
+  if (!termsAreValid(n)) return;
   const s = [];
   for (let i = 0; i < n; i++) { s.push(a + i * d); }
   displaySeries(s, 'Arithmetic Progression (AP)');
@@ -105,6 +123,7 @@ function generateAP() {
 
 function generateGP() {
   const { a, d, n } = getInputValues();
+  if (!termsAreValid(n)) return;
   const s = [];
   for (let i = 0; i < n; i++) { s.push(a * Math.pow(d, i)); }
   displaySeries(s, 'Geometric Progression (GP)');
@@ -112,6 +131,7 @@ function generateGP() {
 
 function generateHP() {
   const { a, d, n } = getInputValues();
+  if (!termsAreValid(n)) return;
   const s = [];
   for (let i = 0; i < n; i++) {
     const ap = a + i * d;
@@ -122,6 +142,7 @@ function generateHP() {
 
 function generateFibonacci() {
   const { n } = getInputValues();
+  if (!termsAreValid(n)) return;
   const s = [];
   let a = 0, b = 1;
   for (let i = 0; i < n; i++) {

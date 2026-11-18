@@ -149,6 +149,16 @@ header {
   margin: 0 0 6px;
 }
 
+/* A short explanation under (or instead of) a result */
+.output .note {
+  margin: 10px 0 0;
+  color: #fde68a;
+}
+
+.output .note:first-child {
+  margin-top: 0;
+}
+
 /* Home page */
 .intro {
   font-size: 1.1rem;
