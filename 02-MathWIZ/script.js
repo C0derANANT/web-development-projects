@@ -166,7 +166,9 @@ function generateFibonacci() {
   const { n } = getInputValues();
   if (!termsAreValid(n)) return;
   const s = [];
-  let a = 0, b = 1;
+  // BigInt (the n after the number) stores whole numbers of any size exactly.
+  // Normal numbers start going wrong after about 78 terms.
+  let a = 0n, b = 1n;
   for (let i = 0; i < n; i++) {
     s.push(a);
     [a, b] = [b, a + b];
