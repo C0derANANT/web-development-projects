@@ -113,11 +113,26 @@ function displaySeries(series, title, note = '') {
     (note ? `<p class="note">${note}</p>` : '');
 }
 
+// Computers store decimals in binary, so 0.1 + 0.2 comes out as 0.30000000000000004.
+// tidy() keeps 12 significant digits, which hides that noise, and turns a result that is
+// tiny next to the numbers that made it (like 0.3 - 3 × 0.1) into a clean 0.
+// Whole numbers have no noise, so they are left exactly as they are.
+function tidy(x, scale = Math.abs(x)) {
+  if (!Number.isFinite(x) || Number.isInteger(x)) return x;
+  if (Math.abs(x) <= scale * 1e-12) return 0;
+  return Number(x.toPrecision(12));
+}
+
+// The i-th term of an AP (counting from 0): a + i × d
+function apTerm(a, d, i) {
+  return tidy(a + i * d, Math.max(Math.abs(a), Math.abs(i * d)));
+}
+
 function generateAP() {
   const { a, d, n } = getInputValues();
   if (!termsAreValid(n)) return;
   const s = [];
-  for (let i = 0; i < n; i++) { s.push(a + i * d); }
+  for (let i = 0; i < n; i++) { s.push(apTerm(a, d, i)); }
   displaySeries(s, 'Arithmetic Progression (AP)');
 }
 
@@ -125,7 +140,7 @@ function generateGP() {
   const { a, d, n } = getInputValues();
   if (!termsAreValid(n)) return;
   const s = [];
-  for (let i = 0; i < n; i++) { s.push(a * Math.pow(d, i)); }
+  for (let i = 0; i < n; i++) { s.push(tidy(a * Math.pow(d, i))); }
   displaySeries(s, 'Geometric Progression (GP)');
 }
 
