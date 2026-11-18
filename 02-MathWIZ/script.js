@@ -148,11 +148,18 @@ function generateHP() {
   const { a, d, n } = getInputValues();
   if (!termsAreValid(n)) return;
   const s = [];
+  let hasZero = false;
   for (let i = 0; i < n; i++) {
-    const ap = a + i * d;
-    s.push((1 / ap).toFixed(4));
+    const ap = apTerm(a, d, i);
+    if (ap === 0) {
+      s.push('undefined');    // 1 ÷ 0 has no value
+      hasZero = true;
+    } else {
+      s.push((1 / ap).toFixed(4));
+    }
   }
-  displaySeries(s, 'Harmonic Progression (HP)');
+  displaySeries(s, 'Harmonic Progression (HP)',
+    hasZero ? 'A term of the matching AP is 0, and 1 ÷ 0 has no value, so that HP term is undefined.' : '');
 }
 
 function generateFibonacci() {
