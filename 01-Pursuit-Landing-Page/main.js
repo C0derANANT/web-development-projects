@@ -1,5 +1,7 @@
 // Runs after the page and both libraries have loaded.
 const root = document.documentElement;
+
+setUpThemeButton();   // works with or without the scroll animation
 const librariesLoaded = typeof Lenis !== 'undefined' && typeof StringTune !== 'undefined';
 
 if (root.classList.contains('motion') && librariesLoaded) {
@@ -91,15 +93,17 @@ function setUpStory() {
 function startConstellation(story) {
   if (typeof particlesJS === 'undefined') return;   // the library didn't load: the story works without it
 
-  // the five stage colours, read from style.css so they live in one place
-  const css = getComputedStyle(document.documentElement);
-  const stageColours = ['--wishlist', '--applied', '--interviewing', '--offer', '--rejected']
-    .map(name => css.getPropertyValue(name).trim());
+  // the five stage colours, read from style.css so they live in one place (and follow the theme)
+  function stageColours() {
+    const css = getComputedStyle(document.documentElement);
+    return ['--wishlist', '--applied', '--interviewing', '--offer', '--rejected']
+      .map(name => css.getPropertyValue(name).trim());
+  }
 
   particlesJS('constellation', {
     particles: {
       number: { value: 60, density: { enable: true, value_area: 900 } },
-      color: { value: stageColours },
+      color: { value: stageColours() },
       shape: { type: 'circle' },
       opacity: { value: 0.85 },
       size: { value: 4, random: true },
@@ -117,6 +121,17 @@ function startConstellation(story) {
   // Only animate while the story is on screen. particles.js stops its loop when movement is off,
   // and draw() starts it again.
   const pJS = window.pJSDom[window.pJSDom.length - 1].pJS;
+
+  // A theme change brings brighter or deeper stage colours: repaint every dot to match.
+  // (hexToRgb comes with particles.js.)
+  document.addEventListener('themechange', () => {
+    const colours = stageColours();
+    pJS.particles.color.value = colours;   // for dots added later
+    pJS.particles.array.forEach((dot, i) => {
+      dot.color.value = colours[i % colours.length];
+      dot.color.rgb = hexToRgb(dot.color.value);
+    });
+  });
   let running = true;
   new IntersectionObserver(([entry]) => {
     if (entry.isIntersecting === running) return;
@@ -124,4 +139,54 @@ function startConstellation(story) {
     pJS.particles.move.enable = running;
     if (running) pJS.fn.vendors.draw();
   }).observe(story);
+}
+
+
+// ---------- Theme button: light or dark ----------
+// The head script in index.html already picked the theme; this keeps the button in step,
+// flips the theme on a click, and remembers the choice for next time.
+function setUpThemeButton() {
+  const button = document.querySelector('.theme-toggle');
+  const browserBar = document.querySelector('meta[name="theme-color"]');
+  const deviceDark = matchMedia('(prefers-color-scheme: dark)');
+  const lessMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  function apply(theme) {
+    root.dataset.theme = theme;   // every colour in style.css follows this
+    button.setAttribute('aria-pressed', theme === 'dark');
+    browserBar.content = getComputedStyle(root).getPropertyValue('--page').trim();
+    document.dispatchEvent(new Event('themechange'));
+  }
+
+  function saved() {
+    try { return localStorage.getItem('theme'); } catch (e) { return null; }
+  }
+
+  apply(root.dataset.theme);
+
+  button.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', next); } catch (e) { /* private mode: it just won't be remembered */ }
+
+    // Where the browser supports it, the new theme spreads out from the button as a circle
+    if (!document.startViewTransition || lessMotion.matches) {
+      apply(next);
+      return;
+    }
+    const r = button.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    document.startViewTransition(() => apply(next)).ready.then(() => {
+      root.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+        { duration: 550, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+      );
+    });
+  });
+
+  // Until the visitor uses the button, follow their device if it switches (for example at sunset)
+  deviceDark.addEventListener('change', (e) => {
+    if (!saved()) apply(e.matches ? 'dark' : 'light');
+  });
 }

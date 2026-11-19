@@ -16,6 +16,8 @@ scroll, twelve messy job applications sort themselves into the app's five stages
   - **03 No account, works offline:** Wi-Fi turns into airplane mode, and a note says everything is still saved
 - **One pinned story:** the sort, the phone and the demo share one pinned section, so each scene hands over to the next
 - **A constellation when a scene settles:** the moving background from my [MathWIZ](../02-MathWIZ) project, here in the five stage colours, fades in behind a scene once it has finished moving
+- **Light and dark themes:** a button in the corner flips every colour on the page, including the phone, which switches to iOS dark mode. It starts on your device's setting and remembers your choice, and the new theme spreads out from the button as a circle
+- **App Store, coming soon:** an honest "Coming soon to the App Store" note next to "Get the code on GitHub", until the app is live
 - **Small touches:** stage names appear letter by letter
 - **Works on phones:** on small screens the stages become rows instead of columns
 - **Accessible fallback:** if the device asks for reduced motion, or a library fails to load, the page shows everything already sorted
@@ -86,6 +88,7 @@ One commit per step, so the history shows the order:
 8. The sorted board flies into the phone, and a constellation appears as scenes settle
 9. The phone logs an application: the form slides up and gets typed in
 10. The phone shows every stage and works offline, with the feature captions beside it
+11. A light/dark theme button, and the App Store coming-soon note
 
 ## 🎨 Inspiration
 
